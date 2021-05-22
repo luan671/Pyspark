@@ -16,9 +16,9 @@ def computeContribs(urls, rank):
 AdjList1 = sc.textFile("/home/tluan/data/02AdjacencyList.txt")
 print (AdjList1.collect())
 
-AdjList2 = AdjList1.map(lambda line : line.split(" "))  # 1. Replace the lambda function with yours
+AdjList2 = AdjList1.map(lambda line : line.split(" ")) 
 print (AdjList2.collect())
-AdjList3 = AdjList2.map(lambda x : (x[0], x[1:]))  # 2. Replace the lambda function with yours
+AdjList3 = AdjList2.map(lambda x : (x[0], x[1:]))  
 AdjList3.persist()
 print (AdjList3.collect())
 
@@ -28,7 +28,7 @@ print (nNumOfNodes)
 
 # Initialize each page's rank; since we use mapValues, the resulting RDD will have the same partitioner as links
 print ("Initialization")
-PageRankValues = AdjList3.mapValues(lambda v : 0.2)  # 3. Replace the lambda function with yours
+PageRankValues = AdjList3.mapValues(lambda v : 0.2) 
 print (PageRankValues.collect())
 
 # Run 30 iterations
@@ -39,13 +39,13 @@ for i in range(1, 30):
     JoinRDD = AdjList3.join(PageRankValues)
     print ("join results")
     print (JoinRDD.collect())
-    contributions = JoinRDD.map(lambda x:x[1]).flatMap(lambda x : computeContribs(x[0],x[1])) # 4. Replace the lambda function with yours
+    contributions = JoinRDD.map(lambda x:x[1]).flatMap(lambda x : computeContribs(x[0],x[1])) 
     print ("contributions")
     print (contributions.collect())
-    accumulations = contributions.reduceByKey(lambda x, y : x+y)  # 5. Replace the lambda function with yours
+    accumulations = contributions.reduceByKey(lambda x, y : x+y)  
     print ("accumulations")
     print (accumulations.collect())
-    PageRankValues = accumulations.mapValues(lambda v : v*0.85 + 0.15/5)  # 6. Replace the lambda function with yours
+    PageRankValues = accumulations.mapValues(lambda v : v*0.85 + 0.15/5)  
     print ("PageRankValues")
     print (PageRankValues.collect())
 
